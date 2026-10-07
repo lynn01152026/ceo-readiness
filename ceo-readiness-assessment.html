@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CEO Readiness Assessment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Montserrat', sans-serif; color: #333; line-height: 1.5; background: transparent; padding: 10px; }
+        .form-container { max-width: 600px; margin: auto; }
+        .question { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #ddd; }
+        .question label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px; color: #1a3a5f; }
+        .options { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+        .options span { font-size: 11px; color: #999; text-transform: uppercase; }
+        .options output { font-size: 13px; font-weight: 700; color: #1a3a5f; min-width: 14px; text-align: center; }
+        input[type="range"] { width: 70%; cursor: pointer; accent-color: #1a3a5f; }
+        .calculate-btn { display: block; width: 100%; background: #1a3a5f; color: white; border: none; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 4px; cursor: pointer; margin-top: 10px; font-family: inherit; }
+        .calculate-btn:hover { background: #24507f; }
+        #results-area { display: none; margin-top: 25px; padding: 15px; border-radius: 4px; background: #f0f4f8; border-left: 4px solid #1a3a5f; }
+        .tier-name { font-weight: bold; font-size: 18px; color: #1a3a5f; margin-bottom: 5px; }
+        .cta-link { display: inline-block; margin-top: 15px; color: #1a3a5f; font-weight: bold; text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <form id="readinessForm">
+        <div class="question">
+            <label>1. The business can operate for 14 days without me answering emails or calls.</label>
+            <div class="options"><span>Disagree</span><input type="range" name="q1" min="1" max="5" value="3"><span>Agree</span><output>3</output></div>
+        </div>
+
+        <div class="question">
+            <label>2. I spend 50%+ of my week on strategy rather than fire-fighting.</label>
+            <div class="options"><span>Disagree</span><input type="range" name="q2" min="1" max="5" value="3"><span>Agree</span><output>3</output></div>
+        </div>
+
+        <div class="question">
+            <label>3. Lead generation produces results independent of my personal networking.</label>
+            <div class="options"><span>Disagree</span><input type="range" name="q3" min="1" max="5" value="3"><span>Agree</span><output>3</output></div>
+        </div>
+
+        <div class="question">
+            <label>4. Pricing and margins allow for scaling without my personal oversight.</label>
+            <div class="options"><span>Disagree</span><input type="range" name="q4" min="1" max="5" value="3"><span>Agree</span><output>3</output></div>
+        </div>
+
+        <div class="question">
+            <label>5. Team members have 1–3 KPIs they are 100% accountable for.</label>
+            <div class="options"><span>Disagree</span><input type="range" name="q5" min="1" max="5" value="3"><span>Agree</span><output>3</output></div>
+        </div>
+
+        <div class="question">
+            <label>6. Core services have documented SOPs a new hire could follow.</label>
+            <div class="options"><span>Disagree</span><input type="range" name="q6" min="1" max="5" value="3"><span>Agree</span><output>3</output></div>
+        </div>
+
+        <button type="button" class="calculate-btn" onclick="runScore()">Calculate My Score</button>
+    </form>
+
+    <div id="results-area" aria-live="polite">
+        <div id="displayScore" style="font-size: 20px; font-weight: bold; margin-bottom: 5px;"></div>
+        <div id="tierName" class="tier-name"></div>
+        <div id="tierText"></div>
+        <a href="https://calendly.com/mlavender" target="_blank" rel="noopener" class="cta-link">Book your 15-minute diagnostic call</a>
+    </div>
+</div>
+
+<script>
+    // Show each slider's current value next to it
+    document.querySelectorAll('#readinessForm input[type="range"]').forEach(function (slider) {
+        var out = slider.parentElement.querySelector('output');
+        slider.addEventListener('input', function () { out.textContent = slider.value; });
+    });
+
+    function runScore() {
+        var sliders = document.querySelectorAll('#readinessForm input[type="range"]');
+        var score = 0;
+        sliders.forEach(function (s) { score += parseInt(s.value, 10); });
+
+        var max = sliders.length * 5; // 30
+        var tier, text;
+
+        if (score >= 24) {
+            tier = 'CEO-Ready';
+            text = 'Your business runs on systems, not on you. You have the foundation to step fully into the CEO seat. The next move is making sure your market sees the leader you have become.';
+        } else if (score >= 15) {
+            tier = 'Emerging CEO';
+            text = 'You are partway there. Some parts of the business run without you, but key areas still lean on your personal involvement. A few targeted changes would free up meaningful time for strategy.';
+        } else {
+            tier = 'Founder-Operator';
+            text = 'Right now, the business depends heavily on you. That is common, and it is fixable. Start by identifying the one area where your involvement creates the biggest bottleneck.';
+        }
+
+        document.getElementById('displayScore').textContent = 'Your score: ' + score + ' / ' + max;
+        document.getElementById('tierName').textContent = tier;
+        document.getElementById('tierText').textContent = text;
+
+        var area = document.getElementById('results-area');
+        area.style.display = 'block';
+        area.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+</script>
+
+</body>
+</html>
